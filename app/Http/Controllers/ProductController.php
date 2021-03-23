@@ -38,8 +38,7 @@ class ProductController extends Controller
     {
         $product->nombre=$request->nombre;
         $product->precio=$request->precio;
-        $product->category_id=$request->city_id;
-        $product->update_at=now();
+        $product->category_id=$request->category_id;
         
         $product->save();
 
