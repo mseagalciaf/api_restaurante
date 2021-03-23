@@ -21,7 +21,12 @@ class ProductController extends Controller
 
     public function show($id)
     {
-        return Product::find($id);
+        $product = Product::find($id);
+        if(isset($product)){
+            return response()->json(['status'=>true,'codigo_http'=>200,'data'=>$product],200);
+        }else{
+            return response()->json(['status'=>false,'codigo_http'=>200,'data'=>'inexistente'],200);
+        }
     }
 
     public function update(Request $request,Product $product)
