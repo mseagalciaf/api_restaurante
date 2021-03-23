@@ -17,28 +17,36 @@ class ProductController extends Controller
         return "Controlador Product: metodo create";
     }
 
-    public function store()
+    public function store(Request $request)
     {
-        return "Controlador Product: metodo store";
+        $product=Product::create($request->all());
+
+        return response()->json(['status'=>true,'codigo_http'=>200,'data'=>'cambios realizado'],200);
     }
 
-    public function show()
+    public function show($id)
     {
-        return "Controlador Product: metodo show";
+        return Product::find($id);
     }
 
     public function edit()
     {
-        return "Controlador Product: metodo edit";
+        
     }
 
-    public function update()
+    public function update(Request $request,Product $product)
     {
-        return "Controlador Product: metodo update";
+        $product->nombre=$request->nombre;
+        $product->precio=$request->precio;
+        $product->category_id=$request->city_id;
+        $product->save();
+
+        return response()->json(['status'=>true,'codigo_http'=>200,'data'=>'cambios_realizados'],200);
     }
     
-    public function destroy()
+    public function destroy(Product $product)
     {
-        return "Controlador Product: metodo destroy";
+        $product->delete();
+        return response()->json(['status'=>true,'codigo_http'=>200,'data'=>'producto_eliminado'],200);
     }
 }
