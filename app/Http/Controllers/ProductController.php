@@ -12,26 +12,16 @@ class ProductController extends Controller
         return Product::get();
     }
 
-    public function create()
-    {
-        return "Controlador Product: metodo create";
-    }
-
     public function store(Request $request)
     {
         $product=Product::create($request->all());
 
-        return response()->json(['status'=>true,'codigo_http'=>200,'data'=>'cambios realizado'],200);
+        return response()->json(['status'=>true,'codigo_http'=>200,'data'=>'productos_agregados'],200);
     }
 
     public function show($id)
     {
         return Product::find($id);
-    }
-
-    public function edit()
-    {
-        
     }
 
     public function update(Request $request,Product $product)
