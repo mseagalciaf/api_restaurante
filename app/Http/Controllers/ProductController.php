@@ -39,6 +39,8 @@ class ProductController extends Controller
         $product->nombre=$request->nombre;
         $product->precio=$request->precio;
         $product->category_id=$request->city_id;
+        $product->update_at=now();
+        
         $product->save();
 
         return response()->json(['status'=>true,'codigo_http'=>200,'data'=>'cambios_realizados'],200);
