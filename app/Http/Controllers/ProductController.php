@@ -16,18 +16,17 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {   
-        //Reglas de validacion
-        $rules = [
-            'nombre'=>'required|min:3',
-            'precio'=>'required|integer|min:1',
-            'category_id'=>'required|exists:categories,id'
-        ];
-        //Se ejecuta la validacion con las reglas anteriores
+        //Se ejecuta la validacion con las reglas de producto
         $validator = Validator::make($request->all(),$this->rulesProduct());
+
         if ($validator->fails()) {
             return response()->json(['status'=>false,'codigo_http'=>400,'data'=>$validator->errors()],400);
         }else{
+            //Si pasa la validacion
+            //Se almacenan los datos
             Product::create($request->all());
+
+            //retorna la respuesta
             return response()->json(['status'=>true,'codigo_http'=>200,'data'=>'productos_agregados'],200);
         }
     }
@@ -42,40 +41,43 @@ class ProductController extends Controller
         }
     }
 
-    public function update(Request $request,Product $product)
+    public function update(Request $request, $id)
     {
-        //Reglas de validacion
-        $rules = [
-            'nombre'=>'required|min:3',
-            'precio'=>'required|integer|min:1',
-            'category_id'=>'required|exists:categories,id'
-        ];
-        //Se ejecuta la validacion con las reglas anteriores
-        $validator = Validator::make($request->all(),$rules);
+        //Se ejecuta la validacion con las reglas de producto
+        $validator = Validator::make($request->all(),$this->rulesProduct());
+
         if ($validator->fails()) {
+            //se retorna la respuesta con los errores
             return response()->json(['status'=>false,'codigo_http'=>400,'data'=>$validator->errors()],400);
         }else{
-            Product::create($request->all());
-            return response()->json(['status'=>true,'codigo_http'=>200,'data'=>'productos_agregados'],200);
+            //Si pasa la validacion
+            //Se busca la existencia del producto
+            $product=Product::find($id);
+
+            //Se modifican los datos
+            $product->nombre=$request->nombre;
+            $product->precio=$request->precio;
+            $product->category_id=$request->category_id;
+
+            //Guarda el registro
+            $product->save();
+
+            //Retorna una respuesta exitosa
+            return response()->json(['status'=>true,'codigo_http'=>200,'data'=>'cambios_realizados'],200);
         }
-
-
-        $product->nombre=$request->nombre;
-        $product->precio=$request->precio;
-        $product->category_id=$request->category_id;
-        
-        $product->save();
-
-        return response()->json(['status'=>true,'codigo_http'=>200,'data'=>'cambios_realizados'],200);
     }
     
     public function destroy($id)
     {
+        //Se busca la existencia del producto
         $producto = Product::find($id);
         if (isset($producto)) {
+            //Si existe lo elimina
             $producto->delete();
+            //Se retorna una respuesta exitosa
             return response()->json(['status'=>true,'codigo_http'=>200,'data'=>'producto_eliminado'],200);
         }else{
+            //Si no existe
             return response()->json(['status'=>true,'codigo_http'=>200,'data'=>'producto_inexistente'],200);
         }
         
