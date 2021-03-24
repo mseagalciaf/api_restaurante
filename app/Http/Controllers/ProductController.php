@@ -53,17 +53,21 @@ class ProductController extends Controller
             //Si pasa la validacion
             //Se busca la existencia del producto
             $product=Product::find($id);
-
-            //Se modifican los datos
-            $product->nombre=$request->nombre;
-            $product->precio=$request->precio;
-            $product->category_id=$request->category_id;
-
-            //Guarda el registro
-            $product->save();
-
-            //Retorna una respuesta exitosa
-            return response()->json(['status'=>true,'codigo_http'=>200,'data'=>'cambios_realizados'],200);
+            if (isset($product)) {
+                //Se modifican los datos
+                $product->nombre=$request->nombre;
+                $product->precio=$request->precio;
+                $product->category_id=$request->category_id;
+    
+                //Guarda el registro
+                $product->save();
+    
+                //Retorna una respuesta exitosa
+                return response()->json(['status'=>true,'codigo_http'=>200,'data'=>'cambios_realizados'],200);  
+            }else{
+                //Si no existe
+                return response()->json(['status'=>true,'codigo_http'=>200,'data'=>'producto_inexistente'],200);
+            }
         }
     }
     
