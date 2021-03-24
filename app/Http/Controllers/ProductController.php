@@ -25,7 +25,7 @@ class ProductController extends Controller
         if(isset($product)){
             return response()->json(['status'=>true,'codigo_http'=>200,'data'=>$product],200);
         }else{
-            return response()->json(['status'=>false,'codigo_http'=>200,'data'=>'inexistente'],200);
+            return response()->json(['status'=>false,'codigo_http'=>200,'data'=>'producto_inexistente'],200);
         }
     }
 
@@ -40,9 +40,15 @@ class ProductController extends Controller
         return response()->json(['status'=>true,'codigo_http'=>200,'data'=>'cambios_realizados'],200);
     }
     
-    public function destroy(Product $product)
+    public function destroy($id)
     {
-        $product->delete();
-        return response()->json(['status'=>true,'codigo_http'=>200,'data'=>'producto_eliminado'],200);
+        $producto = Product::find($id);
+        if (isset($producto)) {
+            $producto->delete();
+            return response()->json(['status'=>true,'codigo_http'=>200,'data'=>'producto_eliminado'],200);
+        }else{
+            return response()->json(['status'=>true,'codigo_http'=>200,'data'=>'producto_inexistente'],200);
+        }
+        
     }
 }
