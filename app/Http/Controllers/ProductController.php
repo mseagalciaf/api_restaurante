@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
 {
@@ -14,10 +15,21 @@ class ProductController extends Controller
     }
 
     public function store(Request $request)
-    {
-        $product=Product::create($request->all());
-
-        return response()->json(['status'=>true,'codigo_http'=>200,'data'=>'productos_agregados'],200);
+    {   
+        //Reglas de validacion
+        $rules = [
+            'nombre'=>'required|min:3',
+            'precio'=>'required|integer|min:1',
+            'category_id'=>'required|exists:categories,id'
+        ];
+        //Se ejecuta la validacion con las reglas anteriores
+        $validator = Validator::make($request->all(),$rules);
+        if ($validator->fails()) {
+            return response()->json(['status'=>false,'codigo_http'=>400,'data'=>$validator->errors()],400);
+        }else{
+            Product::create($request->all());
+            return response()->json(['status'=>true,'codigo_http'=>200,'data'=>'productos_agregados'],200);
+        }
     }
 
     public function show($id)
