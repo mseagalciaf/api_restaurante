@@ -55,8 +55,8 @@ class UserController extends Controller
             $user=User::find($id);
             if (isset($user)) {
                 //Se modifican los datos
-                $user->nombre=$request->nombre;
-                $user->correo=$request->correo;
+                $user->name=$request->name;
+                $user->email=$request->email;
                 $user->password=$request->password;
                 $user->role_id=$request->role_id;
                 $user->sucursale_id=$request->sucursale_id;
@@ -91,8 +91,8 @@ class UserController extends Controller
     public function rulesUser()
     {
         return [
-            'nombre'=>'required|min:3',
-            'correo'=>'required|email:rfc,dns',
+            'name'=>'required|min:3',
+            'email'=>'required|email:rfc,dns',
             'password'=>'required|min:1',
             'role_id' => 'required|exists:roles,id',
             'sucursale_id' => 'required|exists:sucursales,id'
