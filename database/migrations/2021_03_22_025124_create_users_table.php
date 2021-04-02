@@ -17,7 +17,7 @@ class CreateUsersTable extends Migration
             $table->id();
             $table->string('name',45);
             $table->string('email',45)->unique();
-            $table->string('password',45);
+            $table->string('password');
             // llaves foraneas
             $table->unsignedBigInteger('role_id')->nullable();
             $table->unsignedBigInteger('sucursale_id');
