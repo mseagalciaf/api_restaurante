@@ -25,8 +25,8 @@ Route::post('register',[AuthController::class,'register']);
 Route::post('login',[AuthController::class,'login']);
 Route::post('logout', [AuthController::class,'logout']);
 //-----------------  Endpoints SuperAdmin------------------------------
-Route::resource('users', UserController::class, ['except'=> ['create','edit']])->middleware('auth:sanctum');
-Route::resource('products', ProductController::class, ['except'=> ['create','edit']])->middleware('auth:sanctum');
+Route::resource('users', UserController::class, ['except'=> ['create','edit']])->middleware(['auth:sanctum','role:SuperAdmin']);
+Route::resource('products', ProductController::class, ['except'=> ['create','edit']])->middleware(['auth:sanctum','role:SuperAdmin']);
 
 //-------------------Endpoints Admin----------------------------
 
