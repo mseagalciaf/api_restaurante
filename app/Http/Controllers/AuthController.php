@@ -85,7 +85,6 @@ class AuthController extends Controller
             'name'=>'required|min:3',
             'email'=>'required|email:rfc,dns',
             'password'=>'required|min:1',
-            'role_id' => 'required|exists:roles,id',
             'sucursale_id' => 'required|exists:sucursales,id'
         ];
     }
