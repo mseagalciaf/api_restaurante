@@ -8,6 +8,11 @@ use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('role:SuperAdmin')->only('destroy');
+    }
+
     public function index()
     {
         $products= Product::get();

@@ -2,8 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Models\Role;
 use Illuminate\Database\Seeder;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
 class RoleSeeder extends Seeder
 {
@@ -14,17 +15,21 @@ class RoleSeeder extends Seeder
      */
     public function run()
     {
-        $role1= new Role();
-        $role1->nombre="superadmin";
-        $role1->save();
+        $role1= Role::create(['name'=>'SuperAdmin']);
+        $role2= Role::create(['name'=>'Admin']);
+        $role3= Role::create(['name'=>'User']);
 
-        $role2= new Role();
-        $role2->nombre="admin";
-        $role2->save();
+        Permission::create(['name' => 'admin.users.index'])->syncRoles([$role1]);
+        Permission::create(['name' => 'admin.users.store'])->syncRoles([$role1,$role2,$role3]);
+        Permission::create(['name' => 'admin.users.show'])->syncRoles([$role1,$role2,$role3]);
+        Permission::create(['name' => 'admin.users.update'])->syncRoles([$role1,$role2,$role3]);
+        Permission::create(['name' => 'admin.users.destroy'])->syncRoles([$role1,$role2,$role3]);
 
-        $role3= new Role();
-        $role3->nombre="user";
-        $role3->save();
-        
+        Permission::create(['name' => 'admin.products.index'])->syncRoles([$role1,$role2]);
+        Permission::create(['name' => 'admin.products.store'])->syncRoles([$role1]);
+        Permission::create(['name' => 'admin.products.show'])->syncRoles([$role1,$role2]);
+        Permission::create(['name' => 'admin.products.update'])->syncRoles([$role1]);
+        Permission::create(['name' => 'admin.products.destroy'])->syncRoles([$role1]);
+
     }
 }

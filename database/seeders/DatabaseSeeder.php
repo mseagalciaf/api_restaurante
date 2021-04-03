@@ -21,11 +21,11 @@ class DatabaseSeeder extends Seeder
         // \App\Models\User::factory(10)->create();
 
         //----DATOS REALES DE PRUEBA---------
-        $this->call(RoleSeeder::class);
         $this->call(CitySeeder::class);
         $this->call(SucursaleSeeder::class);
         $this->call(StateSeeder::class);
         $this->call(CategorySeeder::class);
+        $this->call(RoleSeeder::class);
 
         //-----DATOS FALSOS DE PRUEBA--------
         User::factory(10)->create();
