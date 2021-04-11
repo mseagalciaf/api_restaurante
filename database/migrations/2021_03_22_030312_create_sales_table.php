@@ -15,10 +15,10 @@ class CreateSalesTable extends Migration
     {
         Schema::create('sales', function (Blueprint $table) {
             $table->id();
-            $table->string('direccion_envio',100);
-            $table->string('telefono',10);
+            $table->string('shipping_address',100);
+            $table->string('phone',10);
             $table->string('total');
-            $table->string('observacion',150)->nullable();
+            $table->string('observation',150)->nullable();
             //llaves foraneas
             $table->unsignedBigInteger('user_id')->nullable();
             $table->unsignedBigInteger('sucursale_id')->nullable();

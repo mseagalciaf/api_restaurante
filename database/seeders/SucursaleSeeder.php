@@ -15,17 +15,17 @@ class SucursaleSeeder extends Seeder
     public function run()
     {
         $sucursal1 = new Sucursale();
-        $sucursal1->nombre="Sucursal Pereira";
+        $sucursal1->name="Sucursal Pereira";
         $sucursal1->city_id=1;
         $sucursal1->save();
 
         $sucursal2 = new Sucursale();
-        $sucursal2->nombre="Sucursal Armenia";
+        $sucursal2->name="Sucursal Armenia";
         $sucursal2->city_id=2;
         $sucursal2->save();
 
         $sucursal3 = new Sucursale();
-        $sucursal3->nombre="Sucursal Manizales";
+        $sucursal3->name="Sucursal Manizales";
         $sucursal3->city_id=3;
         $sucursal3->save();
     }

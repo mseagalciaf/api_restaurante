@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\SuperAdmin;
 
+use App\Http\Controllers\Controller;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -42,7 +43,7 @@ class ProductController extends Controller
         if(isset($product)){
             return response()->json(['status'=>true,'codigo_http'=>200,'data'=>$product],200);
         }else{
-            return response()->json(['status'=>false,'codigo_http'=>200,'data'=>'producto_inexistente'],200);
+            return response()->json(['status'=>false,'codigo_http'=>404,'data'=>'producto_inexistente'],404);
         }
     }
 
@@ -60,8 +61,8 @@ class ProductController extends Controller
             $product=Product::find($id);
             if (isset($product)) {
                 //Se modifican los datos
-                $product->nombre=$request->nombre;
-                $product->precio=$request->precio;
+                $product->name=$request->name;
+                $product->price=$request->price;
                 $product->category_id=$request->category_id;
     
                 //Guarda el registro
@@ -71,7 +72,7 @@ class ProductController extends Controller
                 return response()->json(['status'=>true,'codigo_http'=>200,'data'=>'cambios_realizados'],200);  
             }else{
                 //Si no existe
-                return response()->json(['status'=>true,'codigo_http'=>200,'data'=>'producto_inexistente'],200);
+                return response()->json(['status'=>true,'codigo_http'=>404,'data'=>'producto_inexistente'],404);
             }
         }
     }
@@ -95,8 +96,8 @@ class ProductController extends Controller
     public function rulesProduct()
     {
         return [
-            'nombre'=>'required|min:3',
-            'precio'=>'required|integer|min:1',
+            'name'=>'required|min:3',
+            'price'=>'required|integer|min:1',
             'category_id'=>'required|exists:categories,id'
         ];
     }

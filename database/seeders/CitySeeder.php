@@ -15,15 +15,15 @@ class CitySeeder extends Seeder
     public function run()
     {
         $city1= new City();
-        $city1->nombre="Pereira";
+        $city1->name="Pereira";
         $city1->save();
 
         $city2= new City();
-        $city2->nombre="Armenia";
+        $city2->name="Armenia";
         $city2->save();
 
         $city3= new City();
-        $city3->nombre="Manizales";
+        $city3->name="Manizales";
         $city3->save();
     }
 }

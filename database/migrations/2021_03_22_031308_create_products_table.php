@@ -15,8 +15,8 @@ class CreateProductsTable extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre',45);
-            $table->string('precio',45);
+            $table->string('name',45);
+            $table->string('price',45);
             //llave foranea
             $table->unsignedBigInteger('category_id');
             //Restricciones

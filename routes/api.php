@@ -1,8 +1,11 @@
 <?php
 
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\ProductController;
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\SuperAdmin\CategoryController;
+use App\Http\Controllers\SuperAdmin\CityController;
+use App\Http\Controllers\SuperAdmin\ProductController;
+use App\Http\Controllers\SuperAdmin\SucursalController;
+use App\Http\Controllers\SuperAdmin\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -24,14 +27,25 @@ use Illuminate\Support\Facades\Route;
 Route::post('register',[AuthController::class,'register']);
 Route::post('login',[AuthController::class,'login']);
 Route::post('logout', [AuthController::class,'logout']);
-//-----------------  Endpoints SuperAdmin------------------------------
+
+//----------------- SuperAdmin Endpoints ------------------------------
 Route::resource('users', UserController::class, ['except'=> ['create','edit']])->middleware(['auth:sanctum','role:SuperAdmin']);
 Route::resource('products', ProductController::class, ['except'=> ['create','edit']])->middleware(['auth:sanctum','role:SuperAdmin']);
+Route::resource('categories', CategoryController::class, ['except'=> ['create','edit']])->middleware(['auth:sanctum','role:SuperAdmin']);
+Route::resource('cities', CityController::class, ['except'=> ['create','edit']])->middleware(['auth:sanctum','role:SuperAdmin']);
+Route::resource('sucursales', SucursalController::class, ['except'=> ['create','edit']])->middleware(['auth:sanctum','role:SuperAdmin']);
+Route::resource('groups', SucursalController::class, ['except'=> ['create','edit']])->middleware(['auth:sanctum','role:SuperAdmin']);
 
-//-------------------Endpoints Admin----------------------------
+
+//-------------------Admin Endpoints----------------------------
 
 
-//--------------------Endpoints User----------------------------
+//--------------------User Endpoints ----------------------------
+
+
+//--------------------General Endpoints---------------------------
+Route::resource('sales', SucursalController::class, ['except'=> ['create','edit']]);
+
 
 //-----------------Prueba-----------------------------------------
 Route::post('userinfo',[AuthController::class,'userinfo'])->middleware(['auth:sanctum','permission:admin.users.index']);

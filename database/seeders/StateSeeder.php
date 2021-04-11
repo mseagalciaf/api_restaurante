@@ -15,15 +15,15 @@ class StateSeeder extends Seeder
     public function run()
     {
         $state1 = new State();
-        $state1->nombre="Pendiente";
+        $state1->name="Pendiente";
         $state1->save();
 
         $state2 = new State();
-        $state2->nombre="Realizada";
+        $state2->name="Realizada";
         $state2->save();
 
         $state3 = new State();
-        $state3->nombre="Cancelada";
+        $state3->name="Cancelada";
         $state3->save();
     }
 }
