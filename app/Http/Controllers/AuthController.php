@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
+use function PHPUnit\Framework\isEmpty;
+
 class AuthController extends Controller
 {
 
@@ -35,7 +37,7 @@ class AuthController extends Controller
                 'status' => true,
                 'access_token' => $token,
                 'token_type' => 'Bearer',
-                'user' => $user
+                'user' => $this->userinfo($token)
             ]);
         }
     }
@@ -67,7 +69,9 @@ class AuthController extends Controller
     public function logout(Request $request)
     {   
         $user=User::find($request->id);
-        if ($user) {
+        $user_tokens=json_decode($user->tokens()->get());
+        
+        if (!empty($user_tokens)) {
             $user->tokens()->delete();
             return response()->json([
                 'status' => true,
