@@ -26,18 +26,17 @@ class AuthController extends Controller
             $user =User::create([
                 'name' => $request->name,
                 'email' => $request->email,
-                'password' => $request->password= Hash::make($request->password),
-                'role_id' => $request->role_id,
-                'sucursale_id' => $request->sucursale_id
+                'password' => $request->password= Hash::make($request->password)
             ]);
-
+            $user->assignRole('user');    
             $token = $user->createToken('auth_token')->plainTextToken;
-
+            $user->roles=$user->getRoleNames();
+            //$user->permissions=$user->getAllPermissions();
             return response()->json([
                 'status' => true,
                 'access_token' => $token,
                 'token_type' => 'Bearer',
-                'user' => $this->userinfo($token)
+                'user' => $user
             ]);
         }
     }
@@ -52,18 +51,20 @@ class AuthController extends Controller
         }
         $user = User::where('email',$request->email)->firstOrFail();
         $token = $user->createToken('auth_token')->plainTextToken;
+        $user->roles=$user->getRoleNames();
+        //$user->permissions=$user->getAllPermissions();
 
             return response()->json([
                 'status' => true,
                 'access_token' => $token,
                 'token_type' => 'Bearer',
-                'user' => $user
+                'user' => $user,
             ]);
     }
 
     public function userinfo(Request $request)
     {
-        return $request->user();
+        return $request->user()->getAllPermissions();
     }
 
     public function logout(Request $request)
@@ -92,7 +93,7 @@ class AuthController extends Controller
             'name'=>'required|min:3',
             'email'=>'required|email:rfc,dns',
             'password'=>'required|min:1',
-            'sucursale_id' => 'required|exists:sucursales,id'
+            'sucursale_id' => 'exists:sucursales,id'
         ];
     }
 }

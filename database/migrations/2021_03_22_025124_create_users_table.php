@@ -19,7 +19,7 @@ class CreateUsersTable extends Migration
             $table->string('email',45)->unique();
             $table->string('password');
             // llaves foraneas
-            $table->unsignedBigInteger('sucursale_id');
+            $table->unsignedBigInteger('sucursale_id')->nullable();
             //Restricciones
             $table->foreign('sucursale_id')->references('id')->on('sucursales')->onDelete('cascade');
 

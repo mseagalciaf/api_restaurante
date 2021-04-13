@@ -14,6 +14,7 @@ class CitySeeder extends Seeder
      */
     public function run()
     {
+        
         $city1= new City();
         $city1->name="Pereira";
         $city1->save();
