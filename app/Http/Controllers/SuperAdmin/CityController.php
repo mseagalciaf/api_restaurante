@@ -5,13 +5,17 @@ namespace App\Http\Controllers\SuperAdmin;
 use App\Http\Controllers\Controller;
 use App\Models\City;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class CityController extends Controller
 {
     public function index()
     {
-        $cities = City::all();
+        $cities = DB::table('cities')
+            ->select('cities.*','sucursales.id as sucursale_id','sucursales.name as sucursale_name')
+            ->join('sucursales','cities.id','=','sucursales.city_id')
+            ->get();
         return response()->json([
             'status' => true,
             'codigo_http' => 200,
