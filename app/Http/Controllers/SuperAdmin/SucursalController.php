@@ -5,13 +5,14 @@ namespace App\Http\Controllers\SuperAdmin;
 use App\Http\Controllers\Controller;
 use App\Models\Sucursale;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class SucursalController extends Controller
 {
     public function index()
     {
-        $sucursales = Sucursale::all();
+        $sucursales = DB::table('sucursales')->select('sucursales.*','cities.name as city_name')->join('cities','cities.id','=','sucursales.id')->get();
         return response()->json([
             'status' => true,
             'codigo_http' => 200,
