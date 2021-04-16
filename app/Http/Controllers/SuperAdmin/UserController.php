@@ -12,6 +12,10 @@ class UserController extends Controller
     public function index()
     {
         $users = User::get();
+        
+        foreach ($users as $key => $value) {
+            $value->roles=$this->getRoles($value->id);
+        }
         return response()->json(['status'=>true,'codigo_http'=>200,'data'=>$users],200);
     }
 
@@ -98,5 +102,17 @@ class UserController extends Controller
             'role_id' => 'required|exists:roles,id',
             'sucursale_id' => 'required|exists:sucursales,id'
         ];
+    }
+
+    public function getRoles($id )
+    {
+        $user = User::find($id);
+        return $user->getRoleNames();
+    }
+
+    public function getPermissions($id)
+    {
+        $user = User::find($id);
+        return $user->getAllPermissions();
     }
 }
