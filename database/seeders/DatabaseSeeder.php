@@ -28,10 +28,10 @@ class DatabaseSeeder extends Seeder
         $this->call(RoleSeeder::class);
 
         //-----DATOS FALSOS DE PRUEBA--------
-        User::factory(10)->create();
+        //User::factory(10)->create();
         Product::factory(5)->create();
         Group::factory(5)->create();
         Modifier::factory(20)->create();
-        Sale::factory(20)->create();
+        //Sale::factory(20)->create();
     }
 }
