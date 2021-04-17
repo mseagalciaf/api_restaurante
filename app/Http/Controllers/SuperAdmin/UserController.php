@@ -5,6 +5,7 @@ namespace App\Http\Controllers\SuperAdmin;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
@@ -29,16 +30,24 @@ class UserController extends Controller
         }else{
             //Si pasa la validacion
             //Se almacenan los datos
-            User::create($request->all());
+
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => $request->password= Hash::make($request->password),
+                'sucursale_id' => $request->sucursale_id,
+            ]);
+            $user->assignRole($request->role_id);   
 
             //retorna la respuesta
-            return response()->json(['status'=>true,'codigo_http'=>200,'data'=>'usuarios_agregados'],200);
+            return response()->json(['status'=>true,'codigo_http'=>200,'data'=>'usuario_agregados'],200);
         }
     }
 
     public function show($id)
     {
         $user = User::find($id);
+        $user->roles=$user->getRoleNames();
         if(isset($user)){
             return response()->json(['status'=>true,'codigo_http'=>200,'data'=>$user],200);
         }else{
@@ -49,7 +58,7 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         //Se ejecuta la validacion con las reglas de producto
-        $validator = Validator::make($request->all(),$this->rulesUser());
+        $validator = Validator::make($request->all(),$this->rulesUserUpdate());
 
         if ($validator->fails()) {
             //se retorna la respuesta con los errores
@@ -62,8 +71,10 @@ class UserController extends Controller
                 //Se modifican los datos
                 $user->name=$request->name;
                 $user->email=$request->email;
-                $user->password=$request->password;
-                $user->role_id=$request->role_id;
+                if (!$request->password==="") {
+                    $user->password=Hash::make($request->password);
+                }
+                $user->syncRoles([$request->role_id]);
                 $user->sucursale_id=$request->sucursale_id;
     
                 //Guarda el registro
@@ -99,6 +110,16 @@ class UserController extends Controller
             'name'=>'required|min:3',
             'email'=>'required|email:rfc,dns',
             'password'=>'required|min:1',
+            'role_id' => 'required|exists:roles,id',
+            'sucursale_id' => 'required|exists:sucursales,id'
+        ];
+    }
+
+    public function rulesUserUpdate()
+    {
+        return [
+            'name'=>'required|min:3',
+            'email'=>'required|email:rfc,dns',
             'role_id' => 'required|exists:roles,id',
             'sucursale_id' => 'required|exists:sucursales,id'
         ];
