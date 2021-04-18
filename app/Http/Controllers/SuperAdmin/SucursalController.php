@@ -23,7 +23,7 @@ class SucursalController extends Controller
     public function store(Request $request)
     {
         //Se ejecuta la validacion con las reglas de producto
-        $validator = Validator::make($request->all(),$this->rulesSucursal());
+        $validator = Validator::make($request->all(),$this->rulesSucursale());
 
         if ($validator->fails()) {
             return response()->json(['status'=>false,'codigo_http'=>400,'data'=>$validator->errors()],400);
@@ -92,7 +92,7 @@ class SucursalController extends Controller
         }
     }
 
-    public function rulesSucursal()
+    public function rulesSucursale()
     {
         return [
             'name'=>'required|min:3',

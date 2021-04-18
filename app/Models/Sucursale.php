@@ -8,6 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Sucursale extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'name',
+        'city_id'
+    ];
 
     //Relacion uno a uno (inversa)
     public function city()
