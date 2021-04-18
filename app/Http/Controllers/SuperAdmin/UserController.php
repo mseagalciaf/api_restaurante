@@ -5,6 +5,7 @@ namespace App\Http\Controllers\SuperAdmin;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -12,7 +13,7 @@ class UserController extends Controller
 {
     public function index()
     {
-        $users = User::get();
+        $users = DB::table('users')->select('users.*','sucursales.name as sucursale_name')->join('sucursales','users.sucursale_id','=','sucursales.id')->get();
         
         foreach ($users as $key => $value) {
             $value->roles=$this->getRoles($value->id);

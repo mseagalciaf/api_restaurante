@@ -12,7 +12,7 @@ class SucursalController extends Controller
 {
     public function index()
     {
-        $sucursales = DB::table('sucursales')->select('sucursales.*','cities.name as city_name')->join('cities','cities.id','=','sucursales.id')->get();
+        $sucursales = DB::table('sucursales')->select('sucursales.*','cities.name as city_name')->join('cities','sucursales.city_id','=','cities.id')->get();
         return response()->json([
             'status' => true,
             'codigo_http' => 200,
