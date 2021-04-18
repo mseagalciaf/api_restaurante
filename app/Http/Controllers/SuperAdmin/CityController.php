@@ -14,7 +14,7 @@ class CityController extends Controller
     {
         $cities = DB::table('cities')
             ->select('cities.*','sucursales.id as sucursale_id','sucursales.name as sucursale_name')
-            ->join('sucursales','cities.id','=','sucursales.city_id')
+            ->leftjoin('sucursales','cities.id','=','sucursales.city_id')
             ->get();
         return response()->json([
             'status' => true,
