@@ -13,7 +13,7 @@ class UserController extends Controller
 {
     public function index()
     {
-        $users = User::select('users.*','sucursales.name as sucursale_name')->join('sucursales','users.sucursale_id','=','sucursales.id')->get();
+        $users = User::select('users.*','sucursales.name as sucursale_name')->leftjoin('sucursales','users.sucursale_id','=','sucursales.id')->get();
         
         foreach ($users as $key => $value) {
             $value->roles=$this->getRoles($value->id);

@@ -16,7 +16,10 @@ class ProductController extends Controller
 
     public function index()
     {
-        $products= Product::get();
+        $products= Product::select('products.*','categories.name as category_name')->leftjoin('categories','products.category_id','=','categories.id')->get();
+        foreach ($products as $key => $value) {
+            $value->groups=$value->groups;
+        }
         return response()->json(['status'=>true,'codigo_http'=>200,'data'=>$products],200);
     }
 
