@@ -12,6 +12,9 @@ class GroupController extends Controller
     public function index()
     {
         $groups = Group::all();
+        foreach ($groups as $key => $value) {
+            $value->modifiers=$value->modifiers;
+        }
         return response()->json([
             'status' => true,
             'codigo_http' => 200,

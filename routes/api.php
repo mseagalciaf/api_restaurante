@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\SuperAdmin\CategoryController;
 use App\Http\Controllers\SuperAdmin\CityController;
+use App\Http\Controllers\SuperAdmin\GroupController;
 use App\Http\Controllers\SuperAdmin\ProductController;
 use App\Http\Controllers\SuperAdmin\RoleController;
 use App\Http\Controllers\SuperAdmin\SucursalController;
@@ -36,7 +37,7 @@ Route::resource('products', ProductController::class, ['except'=> ['create','edi
 Route::resource('categories', CategoryController::class, ['except'=> ['create','edit']])->middleware(['auth:sanctum','role:SuperAdmin']);
 Route::resource('cities', CityController::class, ['except'=> ['create','edit']])->middleware(['auth:sanctum','role:SuperAdmin']);
 Route::resource('sucursales', SucursalController::class, ['except'=> ['create','edit']])->middleware(['auth:sanctum','role:SuperAdmin']);
-Route::resource('groups', SucursalController::class, ['except'=> ['create','edit']])->middleware(['auth:sanctum','role:SuperAdmin']);
+Route::resource('groups', GroupController::class, ['except'=> ['create','edit']])->middleware(['auth:sanctum','role:SuperAdmin']);
 Route::resource('roles', RoleController::class, ['except'=> ['create','edit']])->middleware(['auth:sanctum','role:SuperAdmin']);
 
 

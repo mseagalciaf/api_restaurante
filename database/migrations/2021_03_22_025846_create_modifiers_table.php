@@ -15,7 +15,7 @@ class CreateModifiersTable extends Migration
     {
         Schema::create('modifiers', function (Blueprint $table) {
             $table->id();
-            $table->string('name',45);
+            $table->string('name',45)->unique();
             $table->timestamps();
         });
     }

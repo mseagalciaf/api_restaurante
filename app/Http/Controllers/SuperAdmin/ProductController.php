@@ -33,8 +33,8 @@ class ProductController extends Controller
         }else{
             //Si pasa la validacion
             //Se almacenan los datos
-            Product::create($request->all());
-
+            $product = Product::create($request->all());
+            $product->groups()->attach($request->groups);
             //retorna la respuesta
             return response()->json(['status'=>true,'codigo_http'=>200,'data'=>'productos_agregados'],200);
         }
@@ -67,6 +67,7 @@ class ProductController extends Controller
                 $product->name=$request->name;
                 $product->price=$request->price;
                 $product->category_id=$request->category_id;
+                $product->groups()->sync($request->groups);
     
                 //Guarda el registro
                 $product->save();
@@ -101,7 +102,9 @@ class ProductController extends Controller
         return [
             'name'=>'required|min:3',
             'price'=>'required|integer|min:1',
-            'category_id'=>'required|exists:categories,id'
+            'category_id'=>'required|exists:categories,id',
+            'groups' => 'required|array',
+            'groups.*' => 'required|distinct|integer|exists:groups,id'
         ];
     }
 }
