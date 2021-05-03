@@ -109,7 +109,7 @@ class UserController extends Controller
     {
         return [
             'name'=>'required|min:3',
-            'email'=>'required|email:rfc,dns',
+            'email'=>'required|email',
             'password'=>'required|min:1',
             'role_id' => 'required|exists:roles,id',
             'sucursale_id' => 'required|exists:sucursales,id'
@@ -120,7 +120,7 @@ class UserController extends Controller
     {
         return [
             'name'=>'required|min:3',
-            'email'=>'required|email:rfc,dns',
+            'email'=>'required|email',
             'role_id' => 'required|exists:roles,id',
             'sucursale_id' => 'required|exists:sucursales,id'
         ];

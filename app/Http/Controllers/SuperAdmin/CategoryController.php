@@ -10,6 +10,10 @@ use Illuminate\Support\Facades\Validator;
 class CategoryController extends Controller
 {
     
+    public function __construct(){
+        $this->middleware(['auth:sanctum','role:superAdmin'])->only(['store','update','destroy']);
+    }
+
     public function index()
     {
         $categories = Category::all();
