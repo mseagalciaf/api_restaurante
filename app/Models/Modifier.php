@@ -9,6 +9,8 @@ class Modifier extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['name'];
+    
     //relacion muchos a muchos
     public function groups()
     {

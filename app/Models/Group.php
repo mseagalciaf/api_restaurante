@@ -9,6 +9,8 @@ class Group extends Model
 {
     use HasFactory;
 
+    protected $fillable=['name'];
+
     //Relacion muchos a muchos
     public function products()
     {

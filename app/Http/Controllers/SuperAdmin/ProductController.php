@@ -9,9 +9,9 @@ use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('role:SuperAdmin')->only('destroy');
+
+    public function __construct(){
+        $this->middleware(['auth:sanctum','role:SuperAdmin'])->only(['store','update','destroy']);
     }
 
     public function index()
@@ -42,7 +42,12 @@ class ProductController extends Controller
 
     public function show($id)
     {
-        $product = Product::find($id);
+        $product= Product::select('products.*','categories.name as category_name')
+                                ->leftjoin('categories','products.category_id','=','categories.id')
+                                ->where('products.id', $id)
+                                ->first();
+        $product->groups=$product->groups;
+        
         if(isset($product)){
             return response()->json(['status'=>true,'codigo_http'=>200,'data'=>$product],200);
         }else{

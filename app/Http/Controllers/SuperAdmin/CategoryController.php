@@ -11,7 +11,7 @@ class CategoryController extends Controller
 {
     
     public function __construct(){
-        $this->middleware(['auth:sanctum','role:superAdmin'])->only(['store','update','destroy']);
+        $this->middleware(['auth:sanctum','role:SuperAdmin'])->only(['store','update','destroy']);
     }
 
     public function index()
