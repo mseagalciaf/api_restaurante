@@ -1,59 +1,55 @@
 <?php
 
-namespace App\Http\Controllers\SuperAdmin;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Models\City;
+use App\Models\Sucursale;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
-class CityController extends Controller
+class SucursalController extends Controller
 {
     public function index()
     {
-        $cities = DB::table('cities')
-            ->select('cities.*','sucursales.id as sucursale_id','sucursales.name as sucursale_name')
-            ->leftjoin('sucursales','cities.id','=','sucursales.city_id')
-            ->get();
+        $sucursales = DB::table('sucursales')->select('sucursales.*','cities.name as city_name')->join('cities','sucursales.city_id','=','cities.id')->get();
         return response()->json([
             'status' => true,
             'codigo_http' => 200,
-            'data' => $cities
+            'data' => $sucursales
         ],200);
     }
 
     public function store(Request $request)
     {
         //Se ejecuta la validacion con las reglas de producto
-        $validator = Validator::make($request->all(),$this->rulesCity());
+        $validator = Validator::make($request->all(),$this->rulesSucursale());
 
         if ($validator->fails()) {
             return response()->json(['status'=>false,'codigo_http'=>400,'data'=>$validator->errors()],400);
         }else{
             //Si pasa la validacion
             //Se almacenan los datos
-            City::create($request->all());
+            Sucursale::create($request->all());
 
             //retorna la respuesta
-            return response()->json(['status'=>true,'codigo_http'=>200,'data'=>'ciudades_agregadas'],200);
+            return response()->json(['status'=>true,'codigo_http'=>200,'data'=>'sucursales_agregadas'],200);
         }
     }
 
     public function show($id)
     {
-        $city = City::find($id);
-        if(isset($city)){
-            return response()->json(['status'=>true,'codigo_http'=>200,'data'=>$city],200);
+        $sucursale = Sucursale::find($id);
+        if(isset($sucursale)){
+            return response()->json(['status'=>true,'codigo_http'=>200,'data'=>$sucursale],200);
         }else{
-            return response()->json(['status'=>false,'codigo_http'=>404,'data'=>'ciudad_inexistente'],404);
+            return response()->json(['status'=>false,'codigo_http'=>404,'data'=>'sucursal_inexistente'],404);
         }
     }
 
     public function update(Request $request, $id)
     {
         //Se ejecuta la validacion con las reglas de producto
-        $validator = Validator::make($request->all(),$this->rulesCity());
+        $validator = Validator::make($request->all(),$this->rulesSucursale());
 
         if ($validator->fails()) {
             //se retorna la respuesta con los errores
@@ -61,19 +57,20 @@ class CityController extends Controller
         }else{
             //Si pasa la validacion
             //Se busca la existencia del producto
-            $city=City::find($id);
-            if (isset($city)) {
+            $sucursale=Sucursale::find($id);
+            if (isset($sucursale)) {
                 //Se modifican los datos
-                $city->name=$request->name;
+                $sucursale->name=$request->name;
+                $sucursale->city_id=$request->city_id;
     
                 //Guarda el registro
-                $city->save();
+                $sucursale->save();
     
                 //Retorna una respuesta exitosa
                 return response()->json(['status'=>true,'codigo_http'=>200,'data'=>'cambios_realizados'],200);  
             }else{
                 //Si no existe
-                return response()->json(['status'=>true,'codigo_http'=>404,'data'=>'ciudad_inexistente'],404);
+                return response()->json(['status'=>true,'codigo_http'=>404,'data'=>'sucursal_inexistente'],404);
             }
         }
     }
@@ -82,22 +79,23 @@ class CityController extends Controller
     public function destroy($id)
     {
         //Se busca la existencia del producto
-        $city = City::find($id);
-        if (isset($city)) {
+        $sucursale = Sucursale::find($id);
+        if (isset($sucursale)) {
             //Si existe lo elimina
-            $city->delete();
+            $sucursale->delete();
             //Se retorna una respuesta exitosa
-            return response()->json(['status'=>true,'codigo_http'=>200,'data'=>'ciudad_eliminada'],200);
+            return response()->json(['status'=>true,'codigo_http'=>200,'data'=>'sucursal_eliminada'],200);
         }else{
             //Si no existe
-            return response()->json(['status'=>true,'codigo_http'=>404,'data'=>'ciudad_inexistente'],404);
+            return response()->json(['status'=>true,'codigo_http'=>404,'data'=>'sucursal_inexistente'],404);
         }
     }
 
-    public function rulesCity()
+    public function rulesSucursale()
     {
         return [
-            'name'=>'required|min:3'
+            'name'=>'required|min:3',
+            'city_id' => 'required|exists:cities,id'
         ];
     }
 }

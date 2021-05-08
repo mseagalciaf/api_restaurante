@@ -1,55 +1,60 @@
 <?php
 
-namespace App\Http\Controllers\SuperAdmin;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
+use App\Models\Group;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Spatie\Permission\Models\Role;
 
-class RoleController extends Controller
+class GroupController extends Controller
 {
     public function index()
     {
-        $roles = Role::all();
+        $groups = Group::all();
+        foreach ($groups as $key => $value) {
+            $value->modifiers=$value->modifiers;
+        }
         return response()->json([
             'status' => true,
             'codigo_http' => 200,
-            'data' => $roles
+            'data' => $groups
         ],200);
     }
 
     public function store(Request $request)
     {
         //Se ejecuta la validacion con las reglas de producto
-        $validator = Validator::make($request->all(),$this->rulesRole());
+        $validator = Validator::make($request->all(),$this->rulesGroup());
 
         if ($validator->fails()) {
             return response()->json(['status'=>false,'codigo_http'=>400,'data'=>$validator->errors()],400);
         }else{
             //Si pasa la validacion
             //Se almacenan los datos
-            Role::create($request->all());
+            $group = Group::create($request->all());
+            if (isset($request->modifiers)) {
+                $group->modifiers()->attach($request->modifiers);
+            }
 
             //retorna la respuesta
-            return response()->json(['status'=>true,'codigo_http'=>200,'data'=>'roles_agregados'],200);
+            return response()->json(['status'=>true,'codigo_http'=>200,'data'=>'grupos_agregadas'],200);
         }
     }
 
     public function show($id)
     {
-        $role = Role::find($id);
-        if(isset($role)){
-            return response()->json(['status'=>true,'codigo_http'=>200,'data'=>$role],200);
+        $group = Group::find($id);
+        if(isset($group)){
+            return response()->json(['status'=>true,'codigo_http'=>200,'data'=>$group],200);
         }else{
-            return response()->json(['status'=>false,'codigo_http'=>404,'data'=>'role_inexistente'],404);
+            return response()->json(['status'=>false,'codigo_http'=>404,'data'=>'grupo_inexistente'],404);
         }
     }
 
     public function update(Request $request, $id)
     {
         //Se ejecuta la validacion con las reglas de producto
-        $validator = Validator::make($request->all(),$this->rulesRole());
+        $validator = Validator::make($request->all(),$this->rulesGroup());
 
         if ($validator->fails()) {
             //se retorna la respuesta con los errores
@@ -57,42 +62,44 @@ class RoleController extends Controller
         }else{
             //Si pasa la validacion
             //Se busca la existencia del producto
-            $role=Role::find($id);
-            if (isset($role)) {
+            $group=Group::find($id);
+            if (isset($group)) {
                 //Se modifican los datos
-                $role->name=$request->name;
+                $group->name=$request->name;
     
                 //Guarda el registro
-                $role->save();
+                $group->save();
     
                 //Retorna una respuesta exitosa
                 return response()->json(['status'=>true,'codigo_http'=>200,'data'=>'cambios_realizados'],200);  
             }else{
                 //Si no existe
-                return response()->json(['status'=>true,'codigo_http'=>404,'data'=>'role_inexistente'],404);
+                return response()->json(['status'=>true,'codigo_http'=>404,'data'=>'grupo_inexistente'],404);
             }
         }
     }
 
+
     public function destroy($id)
     {
         //Se busca la existencia del producto
-        $role = Role::find($id);
-        if (isset($role)) {
+        $group = Group::find($id);
+        if (isset($group)) {
             //Si existe lo elimina
-            $role->delete();
+            $group->delete();
             //Se retorna una respuesta exitosa
-            return response()->json(['status'=>true,'codigo_http'=>200,'data'=>'role_eliminado'],200);
+            return response()->json(['status'=>true,'codigo_http'=>200,'data'=>'grupo_eliminada'],200);
         }else{
             //Si no existe
-            return response()->json(['status'=>true,'codigo_http'=>404,'data'=>'role_inexistente'],404);
+            return response()->json(['status'=>true,'codigo_http'=>404,'data'=>'grupo_inexistente'],404);
         }
     }
 
-    public function rulesRole()
+    public function rulesGroup()
     {
         return [
             'name'=>'required|min:3'
         ];
     }
 }
+

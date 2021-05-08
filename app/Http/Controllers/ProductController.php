@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Http\Controllers\SuperAdmin;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -47,6 +46,10 @@ class ProductController extends Controller
                                 ->where('products.id', $id)
                                 ->first();
         $product->groups=$product->groups;
+
+        foreach ($product->groups as $key => $value) {
+            $value->modifiers=$value->modifiers ;
+        }
         
         if(isset($product)){
             return response()->json(['status'=>true,'codigo_http'=>200,'data'=>$product],200);
