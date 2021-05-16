@@ -18,6 +18,7 @@ class CreateProductSaleTable extends Migration
             //llaves foraneas
             $table->unsignedBigInteger('product_id')->nullable();
             $table->unsignedBigInteger('sale_id');
+            $table->smallInteger('quantity');
             //restricciones
             $table->foreign('product_id')->references('id')->on('products')->onDelete('set null');
             $table->foreign('sale_id')->references('id')->on('sales')->onDelete('cascade');

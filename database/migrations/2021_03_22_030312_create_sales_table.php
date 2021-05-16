@@ -15,15 +15,14 @@ class CreateSalesTable extends Migration
     {
         Schema::create('sales', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('user_id')->nullable();
             $table->string('shipping_address',100);
             $table->string('phone',10);
             $table->string('total');
-            $table->string('observation',150)->nullable();
-            //llaves foraneas
-            $table->unsignedBigInteger('user_id')->nullable();
+            $table->string('observation',250)->nullable();
             $table->unsignedBigInteger('sucursale_id')->nullable();
             $table->unsignedBigInteger('state_id')->nullable();
-            //Restricciones
+            //Restricciones llaves foraneas
             $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
             $table->foreign('sucursale_id')->references('id')->on('sucursales')->onDelete('set null');
             $table->foreign('state_id')->references('id')->on('states')->onDelete('set null');

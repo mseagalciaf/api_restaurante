@@ -7,6 +7,7 @@ use App\Http\Controllers\GroupController;
 use App\Http\Controllers\ModifierController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\SaleController;
 use App\Http\Controllers\SucursalController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -29,15 +30,4 @@ Route::resource('sucursales', SucursalController::class, ['except'=> ['create','
 Route::resource('groups', GroupController::class, ['except'=> ['create','edit']])->middleware(['auth:sanctum','role:SuperAdmin']);
 Route::resource('roles', RoleController::class, ['except'=> ['create','edit']])->middleware(['auth:sanctum','role:SuperAdmin']);
 Route::resource('modifiers', ModifierController::class, ['except' => ['create','edit']]);
-
-//-------------------Admin Endpoints----------------------------
-
-
-//--------------------User Endpoints ----------------------------
-
-
-//--------------------General Endpoints---------------------------
-Route::resource('sales', SucursalController::class, ['except'=> ['create','edit']]);
-
-
-//-----------------Prueba-----------------------------------------
+Route::resource('sales', SaleController::class, ['except' => ['create','edit']]);
