@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
 
 class CategoryController extends Controller
 {
@@ -33,7 +34,13 @@ class CategoryController extends Controller
         }else{
             //Si pasa la validacion
             //Se almacenan los datos
-            Category::create($request->all());
+            $category= new Category($request->all());
+            $path = $this->base64_to_jpeg($request->image,$request->name);
+            //Renombrar el archivo
+            //$path = $request->image->storeAs('public/categories','id'.'_'.$request->name .'_'.$request->image->extension());
+            
+            $category->image=$path;
+            $category->save();
 
             //retorna la respuesta
             return response()->json(['status'=>true,'codigo_http'=>200,'data'=>'categorias_agregadas'],200);
@@ -54,7 +61,6 @@ class CategoryController extends Controller
     {
         //Se ejecuta la validacion con las reglas de producto
         $validator = Validator::make($request->all(),$this->rulesCategory());
-
         if ($validator->fails()) {
             //se retorna la respuesta con los errores
             return response()->json(['status'=>false,'codigo_http'=>400,'data'=>$validator->errors()],400);
@@ -65,7 +71,14 @@ class CategoryController extends Controller
             if (isset($category)) {
                 //Se modifican los datos
                 $category->name=$request->name;
-    
+
+                //Se elimina la imagen actual
+                $this->deleteCurrentImage($category->image);
+                //Creando path y guardando la imagen
+                $path = $request->image->store('public/categories');
+                $path = Storage::url($path);
+                $category->image= $path;
+
                 //Guarda el registro
                 $category->save();
     
@@ -97,7 +110,39 @@ class CategoryController extends Controller
     public function rulesCategory()
     {
         return [
-            'name'=>'required|min:3'
+            'name'=>'required|min:3',
+            
         ];
+    }
+
+    public function deleteCurrentImage($ruta){
+        $path = str_replace('storage','public',$ruta);
+        Storage::delete([$path]);
+    }
+
+    public function base64_to_jpeg($base64_string,$name)
+    {
+        $data = explode( ',', $base64_string );
+
+        $format = explode(';',$data[0]);
+        $format = explode('/',$format[0]);
+        $name = str_replace(' ','_',$name);
+        
+        $path = 'categories/'.time().'_'.$name.'.'.$format[1];
+        Storage::disk('public')->put($path,base64_decode($data[1]));
+        return 'storage/'.$path;
+
+        /* $ifp = fopen($output_file,'wb');
+
+        // split the string on commas
+        // $data[ 0 ] == "data:image/png;base64"
+        // $data[ 1 ] == <actual base64 string>
+        $data = explode( ',', $base64_string );
+
+        fwrite($ifp,base64_decode($data[1]));
+
+        fclose($ifp);
+
+        return $output_file; */
     }
 }
