@@ -6,10 +6,10 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Controllers\Controller;
 
 class CategoryController extends Controller
 {
-    
     public function __construct(){
         $this->middleware(['auth:sanctum','role:SuperAdmin'])->only(['store','update','destroy']);
     }
@@ -35,7 +35,9 @@ class CategoryController extends Controller
             //Si pasa la validacion
             //Se almacenan los datos
             $category= new Category($request->all());
-            $path = $this->base64_to_jpeg($request->image,$request->name);
+            if ($request->image) {
+                $path = $this->base64_to_jpeg($request->image,$request->name);
+            }
             //Renombrar el archivo
             //$path = $request->image->storeAs('public/categories','id'.'_'.$request->name .'_'.$request->image->extension());
             
@@ -68,16 +70,17 @@ class CategoryController extends Controller
             //Si pasa la validacion
             //Se busca la existencia del producto
             $category=Category::find($id);
+
             if (isset($category)) {
+
                 //Se modifican los datos
                 $category->name=$request->name;
 
-                //Se elimina la imagen actual
-                $this->deleteCurrentImage($category->image);
-                //Creando path y guardando la imagen
-                $path = $request->image->store('public/categories');
-                $path = Storage::url($path);
-                $category->image= $path;
+                if ($request->image && $request->image!=$category->image) {
+                    $this->deleteCurrentImage($category->image);
+                    $path = $this->base64_to_jpeg($request->image,$request->name);
+                    $category->image= $path;
+                }
 
                 //Guarda el registro
                 $category->save();
@@ -98,6 +101,7 @@ class CategoryController extends Controller
         $category = Category::find($id);
         if (isset($category)) {
             //Si existe lo elimina
+            $this->deleteCurrentImage($category->image);
             $category->delete();
             //Se retorna una respuesta exitosa
             return response()->json(['status'=>true,'codigo_http'=>200,'data'=>'categoria_eliminada'],200);
@@ -132,17 +136,5 @@ class CategoryController extends Controller
         Storage::disk('public')->put($path,base64_decode($data[1]));
         return 'storage/'.$path;
 
-        /* $ifp = fopen($output_file,'wb');
-
-        // split the string on commas
-        // $data[ 0 ] == "data:image/png;base64"
-        // $data[ 1 ] == <actual base64 string>
-        $data = explode( ',', $base64_string );
-
-        fwrite($ifp,base64_decode($data[1]));
-
-        fclose($ifp);
-
-        return $output_file; */
     }
 }
