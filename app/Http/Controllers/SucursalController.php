@@ -91,6 +91,15 @@ class SucursalController extends Controller
         }
     }
 
+    public function sucursalProducts(Sucursale $sucursale)
+    {
+        $products = $sucursale->products;
+        foreach ($products as $product) {
+            $product->groups = $product->groups;
+        }
+        return response()->json(['status'=>true,'codigo_http'=>200,'data'=>$products],200);
+    }
+
     public function rulesSucursale()
     {
         return [

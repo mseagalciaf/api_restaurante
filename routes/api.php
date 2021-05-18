@@ -26,6 +26,7 @@ Route::resource('users', UserController::class, ['except'=> ['create','edit']])-
 Route::resource('products', ProductController::class, ['except'=> ['create','edit']]);
 Route::resource('categories', CategoryController::class, ['except'=> ['create','edit']]);
 Route::resource('cities', CityController::class, ['except'=> ['create','edit']])->middleware(['auth:sanctum','role:SuperAdmin']);
+Route::get('sucursales/{sucursale}/products',[SucursalController::class,'sucursalProducts']);
 Route::resource('sucursales', SucursalController::class, ['except'=> ['create','edit']])->middleware(['auth:sanctum','role:SuperAdmin']);
 Route::resource('groups', GroupController::class, ['except'=> ['create','edit']])->middleware(['auth:sanctum','role:SuperAdmin']);
 Route::resource('roles', RoleController::class, ['except'=> ['create','edit']])->middleware(['auth:sanctum','role:SuperAdmin']);
