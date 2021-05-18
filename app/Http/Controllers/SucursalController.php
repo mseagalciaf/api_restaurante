@@ -9,6 +9,11 @@ use Illuminate\Support\Facades\Validator;
 
 class SucursalController extends Controller
 {
+
+    public function __contruct()
+    {
+       $this->middleware(['auth:sanctum','role:SuperAdmin'])->only(['store','update','destroy']);
+    }
     public function index()
     {
         $sucursales = DB::table('sucursales')->select('sucursales.*','cities.name as city_name')->join('cities','sucursales.city_id','=','cities.id')->get();
