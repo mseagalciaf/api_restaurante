@@ -35,6 +35,7 @@ class CategoryController extends Controller
             //Si pasa la validacion
             //Se almacenan los datos
             $category= new Category($request->all());
+            
             if ($request->image) {
                 $path = $this->base64_to_jpeg($request->image,$request->name);
             }

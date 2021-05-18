@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
@@ -32,7 +33,13 @@ class ProductController extends Controller
         }else{
             //Si pasa la validacion
             //Se almacenan los datos
-            $product = Product::create($request->all());
+            $product = new Product($request->all());
+            if ($request->image) {
+                $path = $this->base64_to_jpeg($request->image,$request->name);
+                $product->image=$path;
+            }
+            $product->save();
+
             $product->groups()->attach($request->groups);
             //retorna la respuesta
             return response()->json(['status'=>true,'codigo_http'=>200,'data'=>'productos_agregados'],200);
@@ -70,6 +77,7 @@ class ProductController extends Controller
             //Si pasa la validacion
             //Se busca la existencia del producto
             $product=Product::find($id);
+
             if (isset($product)) {
                 //Se modifican los datos
                 $product->name=$request->name;
@@ -77,9 +85,17 @@ class ProductController extends Controller
                 $product->category_id=$request->category_id;
                 $product->groups()->sync($request->groups);
     
+                if ($request->image && $request->image!=$product->image) {
+                    $this->deleteCurrentImage($product->image);
+                    $path = $this->base64_to_jpeg($request->image,$request->name);
+                    $product->image= $path;
+                }
+
                 //Guarda el registro
                 $product->save();
-    
+                
+
+
                 //Retorna una respuesta exitosa
                 return response()->json(['status'=>true,'codigo_http'=>200,'data'=>'cambios_realizados'],200);  
             }else{
@@ -92,10 +108,11 @@ class ProductController extends Controller
     public function destroy($id)
     {
         //Se busca la existencia del producto
-        $producto = Product::find($id);
-        if (isset($producto)) {
+        $product = Product::find($id);
+        if (isset($product)) {
             //Si existe lo elimina
-            $producto->delete();
+            $this->deleteCurrentImage($product->image);
+            $product->delete();
             //Se retorna una respuesta exitosa
             return response()->json(['status'=>true,'codigo_http'=>200,'data'=>'producto_eliminado'],200);
         }else{
@@ -114,5 +131,24 @@ class ProductController extends Controller
             'groups' => 'required|array',
             'groups.*' => 'required|distinct|integer|exists:groups,id'
         ];
+    }
+
+    public function deleteCurrentImage($ruta){
+        $path = str_replace('storage','public',$ruta);
+        Storage::delete([$path]);
+    }
+
+    public function base64_to_jpeg($base64_string,$name)
+    {
+        $data = explode( ',', $base64_string );
+
+        $format = explode(';',$data[0]);
+        $format = explode('/',$format[0]);
+        $name = str_replace(' ','_',$name);
+        
+        $path = 'products/'.time().'_'.$name.'.'.$format[1];
+        Storage::disk('public')->put($path,base64_decode($data[1]));
+        return 'storage/'.$path;
+
     }
 }
