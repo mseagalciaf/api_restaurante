@@ -123,7 +123,7 @@ class SucursalController extends Controller
     {
         $product=$sucursale->products->where('id',$productId)->first();
         if ($sucursale) {
-            $prueba=$product->pivot();
+            $prueba=$product->pivot;
             return response()->json(['status'=>true,'codigo_http'=>200,'data'=>$prueba],200);
         }else{
             return response()->json(['status'=>false,'codigo_http'=>404,'data'=>$sucursale],400);

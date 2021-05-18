@@ -28,6 +28,6 @@ class Sucursale extends Model
     //Relacion muchos a muchos
     public function products()
     {
-        return $this->belongsToMany(Product::class);
+        return $this->belongsToMany(Product::class)->withPivot('activated');
     }
 }
