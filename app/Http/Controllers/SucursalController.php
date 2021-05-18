@@ -121,12 +121,19 @@ class SucursalController extends Controller
 
     public function sucursalProductUpdate(Sucursale $sucursale, $productId, Request $request)
     {
-        $product=$sucursale->products->where('id',$productId)->first();
-        if ($sucursale) {
-            $prueba=$product->pivot;
-            return response()->json(['status'=>true,'codigo_http'=>200,'data'=>$prueba],200);
+        $validator = Validator::make($request->all(),['activated'=>'required|boolean']);
+        
+        if (!$validator->fails()) {
+            $product=$sucursale->products->where('id',$productId)->first();
+            if ($product) {
+                $product->pivot->activated = $request->activated; 
+                $product->pivot->save(); 
+                return response()->json(['status'=>true,'codigo_http'=>200,'data'=>'actualizado' ],200);
+            }else{
+                return response()->json(['status'=>true,'codigo_http'=>200,'data'=>'producto_inexistente' ],200);
+            }
         }else{
-            return response()->json(['status'=>false,'codigo_http'=>404,'data'=>$sucursale],400);
+            return response()->json(['status'=>false,'codigo_http'=>404,'data'=> $validator->errors()],400);
         }
     }
     //Rules to Validators

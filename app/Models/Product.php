@@ -20,7 +20,7 @@ class Product extends Model
     //Relacion muchos a muchos
     public function sucursales()
     {
-        return $this->belongsToMany(Sucursale::class);
+        return $this->belongsToMany(Sucursale::class)->withPivot('activated');
     }
 
     //Relacion muchos a muchos
