@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\Sucursale;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -24,23 +25,36 @@ class ProductController extends Controller
     }
 
     public function store(Request $request)
-    {   
+    {
         //Se ejecuta la validacion con las reglas de producto
         $validator = Validator::make($request->all(),$this->rulesProduct());
-
+        
         if ($validator->fails()) {
             return response()->json(['status'=>false,'codigo_http'=>400,'data'=>$validator->errors()],400);
         }else{
             //Si pasa la validacion
             //Se almacenan los datos
+            
+            
+            
             $product = new Product($request->all());
             if ($request->image) {
                 $path = $this->base64_to_jpeg($request->image,$request->name);
                 $product->image=$path;
             }
+
+            $sucursaleIds=[];
+            foreach (Sucursale::get() as $value) {
+                array_push($sucursaleIds,$value->id);
+            }
+            
             $product->save();
+            
+            $product->sucursales()->attach($sucursaleIds,['activated'=>true]);
 
             $product->groups()->attach($request->groups);
+
+            
             //retorna la respuesta
             return response()->json(['status'=>true,'codigo_http'=>200,'data'=>'productos_agregados'],200);
         }
@@ -93,9 +107,7 @@ class ProductController extends Controller
 
                 //Guarda el registro
                 $product->save();
-                
-
-
+            
                 //Retorna una respuesta exitosa
                 return response()->json(['status'=>true,'codigo_http'=>200,'data'=>'cambios_realizados'],200);  
             }else{
