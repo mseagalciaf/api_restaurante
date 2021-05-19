@@ -21,6 +21,7 @@ class ProductAdminController extends Controller
         if ($products) {
             foreach ($products as $product) {
                 $product->groups = $product->groups;
+                $product->category=$product->category;
             }
             return response()->json(['status'=>true,'codigo_http'=>200,'data'=>$products],200);
         }else{
