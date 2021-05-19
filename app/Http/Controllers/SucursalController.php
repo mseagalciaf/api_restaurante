@@ -96,46 +96,7 @@ class SucursalController extends Controller
         }
     }
 
-    public function sucursalProducts(Sucursale $sucursale)
-    {
-        $products = $sucursale->products;
-        if ($products) {
-            foreach ($products as $product) {
-                $product->groups = $product->groups;
-            }
-            return response()->json(['status'=>true,'codigo_http'=>200,'data'=>$products],200);
-        }else{
-            return response()->json(['status'=>false,'codigo_http'=>404,'data'=>'products_inexistente'],400);
-        }
-    }
-
-    public function sucursalProduct(Sucursale $sucursale, $productId)
-    {
-        $products=$sucursale->products->where('id',$productId)->first();
-        if ($products) {
-            return response()->json(['status'=>true,'codigo_http'=>200,'data'=>$products],200);
-        }else{
-            return response()->json(['status'=>false,'codigo_http'=>404,'data'=>'product_inexistente'],400);
-        }
-    }
-
-    public function sucursalProductUpdate(Sucursale $sucursale, $productId, Request $request)
-    {
-        $validator = Validator::make($request->all(),['activated'=>'required|boolean']);
-        
-        if (!$validator->fails()) {
-            $product=$sucursale->products->where('id',$productId)->first();
-            if ($product) {
-                $product->pivot->activated = $request->activated; 
-                $product->pivot->save(); 
-                return response()->json(['status'=>true,'codigo_http'=>200,'data'=>'actualizado' ],200);
-            }else{
-                return response()->json(['status'=>true,'codigo_http'=>200,'data'=>'producto_inexistente' ],200);
-            }
-        }else{
-            return response()->json(['status'=>false,'codigo_http'=>404,'data'=> $validator->errors()],400);
-        }
-    }
+    
     //Rules to Validators
     public function rulesSucursale()
     {
