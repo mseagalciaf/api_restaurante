@@ -66,7 +66,9 @@ class GroupController extends Controller
             if (isset($group)) {
                 //Se modifican los datos
                 $group->name=$request->name;
-    
+                if (isset($request->modifiers)) {
+                    $group->modifiers()->sync($request->modifiers);
+                }
                 //Guarda el registro
                 $group->save();
     
