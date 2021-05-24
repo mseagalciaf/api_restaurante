@@ -10,6 +10,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\SucursalController;
+use App\Http\Controllers\user\cartController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -40,3 +41,6 @@ Route::resource('sales', SaleController::class, ['except' => ['create','edit']])
 Route::get('sucursales/{sucursale}/products/{productId}',[ProductAdminController::class,'sucursalProduct']);
 Route::put('sucursales/{sucursale}/products/{productId}',[ProductAdminController::class,'sucursalProductUpdate']);
 Route::get('sucursales/{sucursale}/products',[ProductAdminController::class,'sucursalProducts']);
+
+//--------------------------User acrtions -----------------------------
+Route::post('cart/validateProducts/{sucursale}',[cartController::class,'validateProducts']);
