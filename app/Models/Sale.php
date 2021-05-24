@@ -9,6 +9,8 @@ class Sale extends Model
 {
     use HasFactory;
 
+    protected $guarded = [''];
+
     //Relacion muchos a muchos
     public function products()
     {

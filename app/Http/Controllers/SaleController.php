@@ -28,7 +28,8 @@ class SaleController extends Controller
         }else{
             //Si pasa la validacion
             //Se almacenan los datos
-            Sale::create($request->all());
+            $sale = Sale::create($request->all());
+            $sale->products()->attach($request->products);
 
             //retorna la respuesta
             return response()->json(['status'=>true,'codigo_http'=>200,'data'=>'ventas_agregadas'],200);
@@ -98,11 +99,10 @@ class SaleController extends Controller
     {
         return [
             'shipping_address' => 'required|min:3',
-            'phone' => 'required|integer|between:1:9999999999',
+            'phone' => 'required|integer|between:1,9999999999',
             'total' => 'required|integer',
             'user_id' => 'required|exists:users,id',
-            'sucursale_id' => 'required|exists:sucursales,id',
-            'state_id' => 'required|exists:states,id'
+            'sucursale_id' => 'required|exists:sucursales,id'
         ];
     }
 }
